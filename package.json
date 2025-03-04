@@ -1,5 +1,5 @@
 {
-  "name": "openapi-ts-request",
+  "name": "openapi-ts-request-dotnet",
   "version": "1.1.2",
   "description": "Swagger2/OpenAPI3/Apifox to TypeScript/JavaScript, request client(support any client), request mock service, enum and enum translation, react-query/vue-query, type field label, JSON Schemas",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:openapi-ui/openapi-ts-request.git"
+    "url": "git+git@github.com/sabernagato/openapi-ts-request.git"
   },
   "license": "MIT",
   "author": "rookie-luochao",
