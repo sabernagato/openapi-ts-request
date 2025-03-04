@@ -140,6 +140,10 @@ export type GenerateServiceProps = {
    */
   templatesFolder?: string;
   /**
+   * 是否使用 description 中的枚举定义
+   */
+  useEnumDescription?: boolean;
+  /**
    * 自定义 hook
    */
   hook?: {
@@ -274,6 +278,7 @@ export async function generateService({
       nullable: false,
       isOnlyGenTypeScriptType: false,
       isCamelCase: true,
+      useEnumDescription: false,
       ...rest,
     },
     openAPI

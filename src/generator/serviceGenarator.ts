@@ -1121,8 +1121,41 @@ export default class ServiceGenerator {
     let enumStr = '';
     let enumLabelTypeStr = '';
 
+    // 解析 description 中的枚举翻译
+    const parseDescriptionEnum = (description: string): Map<number, string> => {
+      const enumMap = new Map<number, string>();
+      if (!description) return enumMap;
+
+      const pairs = description.split(',');
+      pairs.forEach((pair) => {
+        let label = pair.split('=').at(0);
+        const value = pair.split('=').at(1);
+        if (label.includes(':')) {
+          label = label.split(':')[1];
+        }
+        if (label.includes('(')) {
+          label = label.split('(')[0];
+        }
+
+        if (label && value) {
+          enumMap.set(Number(value), label);
+        }
+      });
+      return enumMap;
+    };
+
     if (numberEnum.includes(schemaObject.type) || isAllNumber(enumArray)) {
-      enumStr = `{${map(enumArray, (value) => `"NUMBER_${value}"=${Number(value)}`).join(',')}}`;
+      if (this.config.useEnumDescription && schemaObject.description) {
+        const enumMap = parseDescriptionEnum(schemaObject.description);
+        enumStr = `{${map(enumArray, (value) => {
+          const enumLabel = enumMap.get(Number(value));
+          return `${enumLabel}=${Number(value)}`;
+        }).join(',')}}`;
+        log('enumStr', enumStr);
+      } else {
+        enumStr = `{${map(enumArray, (value) => `"NUMBER_${value}"=${Number(value)}`).join(',')}}`;
+      }
+      // enumStr = `{${map(enumArray, (value) => `"NUMBER_${value}"=${Number(value)}`).join(',')}}`;
     } else if (isAllNumeric(enumArray)) {
       enumStr = `{${map(enumArray, (value) => `"STRING_NUMBER_${value}"="${value}"`).join(',')}}`;
     } else {
@@ -1133,13 +1166,11 @@ export default class ServiceGenerator {
     if (schemaObject['x-enum-varnames'] && schemaObject['x-enum-comments']) {
       enumLabelTypeStr = `{${map(enumArray, (value, index) => {
         const enumKey = schemaObject['x-enum-varnames'][index];
-
         return `${value}:"${schemaObject['x-enum-comments'][enumKey]}"`;
       }).join(',')}}`;
     } else if (schemaObject?.['x-apifox']?.['enumDescriptions']) {
       enumLabelTypeStr = `{${map(enumArray, (value: string) => {
         const enumLabel = schemaObject['x-apifox']['enumDescriptions'][value];
-
         return `${value}:"${enumLabel}"`;
       }).join(',')}}`;
     } else if (schemaObject?.['x-apifox-enum']) {
@@ -1148,12 +1179,19 @@ export default class ServiceGenerator {
           schemaObject['x-apifox-enum'],
           (item) => item.value === value
         )?.description;
-
         return `${value}:"${enumLabel}"`;
       }).join(',')}}`;
     } else {
       if (numberEnum.includes(schemaObject.type) || isAllNumber(enumArray)) {
-        enumLabelTypeStr = `{${map(enumArray, (value) => `"NUMBER_${value}":${Number(value)}`).join(',')}}`;
+        if (this.config.useEnumDescription && schemaObject.description) {
+          const enumMap = parseDescriptionEnum(schemaObject.description);
+          enumLabelTypeStr = `{${map(enumArray, (value) => {
+            const enumLabel = enumMap.get(Number(value));
+            return `"${enumLabel}":${Number(value)}`;
+          }).join(',')}}`;
+        } else {
+          enumLabelTypeStr = `{${map(enumArray, (value) => `"NUMBER_${value}":${Number(value)}`).join(',')}}`;
+        }
       } else if (isAllNumeric(enumArray)) {
         enumLabelTypeStr = `{${map(enumArray, (value) => `"STRING_NUMBER_${value}":"${value}"`).join(',')}}`;
       } else {
