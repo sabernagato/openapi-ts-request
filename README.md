@@ -1,5 +1,20 @@
 ## 介绍
 
+fork 自[源仓库](https://github.com/openapi-ui/openapi-ts-request/issues/100) ，修改了 enum 的实现，使得 dotnet 项目的 enum 翻译不再使用数字，翻译内容使用description内容，格式参考
+
+```json
+{
+  "SysUserRole": {
+    "enum": [0, 1, 2],
+    "type": "integer",
+    "description": "系统用户角色:User(普通用户)=0,Agent(经纪人)=1,Admin(管理员)=2",
+    "format": "int32"
+  }
+}
+```
+
+由于需求小众，格式要求特殊，故不再提 pr与主仓库合并。
+
 [![GitHub Repo stars](https://img.shields.io/github/stars/openapi-ui/openapi-ts-request?style=social)](https://github.com/openapi-ui/openapi-ts-request) [![npm (scoped)](https://img.shields.io/npm/v/openapi-ts-request)](https://www.npmjs.com/package/openapi-ts-request) ![GitHub tag](https://img.shields.io/github/v/tag/openapi-ui/openapi-ts-request?include_prereleases)
 
 <a href="https://github.com/openapi-ui/openapi-ts-request/blob/master/README-en_US.md">English</a> | 简体中文
