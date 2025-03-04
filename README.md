@@ -1,20 +1,5 @@
 ## 介绍
 
-fork 自[源仓库](https://github.com/openapi-ui/openapi-ts-request/issues/100) ，修改了 enum 的实现，使得 dotnet 项目的 enum 翻译不再使用数字，翻译内容使用description内容，格式参考
-
-```json
-{
-  "SysUserRole": {
-    "enum": [0, 1, 2],
-    "type": "integer",
-    "description": "系统用户角色:User(普通用户)=0,Agent(经纪人)=1,Admin(管理员)=2",
-    "format": "int32"
-  }
-}
-```
-
-由于需求小众，格式要求特殊，故不再提 pr与主仓库合并。
-
 [![GitHub Repo stars](https://img.shields.io/github/stars/openapi-ui/openapi-ts-request?style=social)](https://github.com/openapi-ui/openapi-ts-request) [![npm (scoped)](https://img.shields.io/npm/v/openapi-ts-request)](https://www.npmjs.com/package/openapi-ts-request) ![GitHub tag](https://img.shields.io/github/v/tag/openapi-ui/openapi-ts-request?include_prereleases)
 
 <a href="https://github.com/openapi-ui/openapi-ts-request/blob/master/README-en_US.md">English</a> | 简体中文
@@ -219,6 +204,7 @@ $ openapi --help
     --isTranslateToEnglishTag <boolean> translate chinese tag name to english tag name (default: false)
     --isOnlyGenTypeScriptType <boolean> only generate typescript type (default: false)
     --isCamelCase <boolean>             camelCase naming of controller files and request client (default: true)
+    --isSupportParseEnumDesc <boolean>  parse enum description to generate enum label (default: false)
     -h, --help                          display help for command
 ```
 
@@ -255,6 +241,7 @@ openapi --i ./spec.json --o ./apis
 | isTranslateToEnglishTag | 否 | boolean | false | 将中文 tag 名称翻译成英文 tag 名称 |
 | isOnlyGenTypeScriptType | 否 | boolean | false | 仅生成 typescript 类型 |
 | isCamelCase | 否 | boolean | true | 小驼峰命名文件和请求函数 |
+| isSupportParseEnumDesc | 否 | boolean | false | 解析枚举描述生成枚举标签，格式参考：`系统用户角色:User(普通用户)=0,Agent(经纪人)=1,Admin(管理员)=2` |
 | hook | 否 | [Custom Hook](#Custom-Hook) | - | 自定义 hook |
 
 ## 自定义 Hook

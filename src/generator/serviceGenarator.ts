@@ -90,6 +90,7 @@ import {
   isReferenceObject,
   isSchemaObject,
   markAllowedSchema,
+  parseDescriptionEnum,
   replaceDot,
   resolveFunctionName,
   resolveRefs,
@@ -1121,31 +1122,8 @@ export default class ServiceGenerator {
     let enumStr = '';
     let enumLabelTypeStr = '';
 
-    // 解析 description 中的枚举翻译
-    const parseDescriptionEnum = (description: string): Map<number, string> => {
-      const enumMap = new Map<number, string>();
-      if (!description) return enumMap;
-
-      const pairs = description.split(',');
-      pairs.forEach((pair) => {
-        let label = pair.split('=').at(0);
-        const value = pair.split('=').at(1);
-        if (label.includes(':')) {
-          label = label.split(':')[1];
-        }
-        if (label.includes('(')) {
-          label = label.split('(')[0];
-        }
-
-        if (label && value) {
-          enumMap.set(Number(value), label);
-        }
-      });
-      return enumMap;
-    };
-
     if (numberEnum.includes(schemaObject.type) || isAllNumber(enumArray)) {
-      if (this.config.useEnumDescription && schemaObject.description) {
+      if (this.config.isSupportParseEnumDesc && schemaObject.description) {
         const enumMap = parseDescriptionEnum(schemaObject.description);
         enumStr = `{${map(enumArray, (value) => {
           const enumLabel = enumMap.get(Number(value));
@@ -1155,7 +1133,6 @@ export default class ServiceGenerator {
       } else {
         enumStr = `{${map(enumArray, (value) => `"NUMBER_${value}"=${Number(value)}`).join(',')}}`;
       }
-      // enumStr = `{${map(enumArray, (value) => `"NUMBER_${value}"=${Number(value)}`).join(',')}}`;
     } else if (isAllNumeric(enumArray)) {
       enumStr = `{${map(enumArray, (value) => `"STRING_NUMBER_${value}"="${value}"`).join(',')}}`;
     } else {
@@ -1183,7 +1160,7 @@ export default class ServiceGenerator {
       }).join(',')}}`;
     } else {
       if (numberEnum.includes(schemaObject.type) || isAllNumber(enumArray)) {
-        if (this.config.useEnumDescription && schemaObject.description) {
+        if (this.config.isSupportParseEnumDesc && schemaObject.description) {
           const enumMap = parseDescriptionEnum(schemaObject.description);
           enumLabelTypeStr = `{${map(enumArray, (value) => {
             const enumLabel = enumMap.get(Number(value));

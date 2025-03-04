@@ -142,7 +142,7 @@ export type GenerateServiceProps = {
   /**
    * 是否使用 description 中的枚举定义
    */
-  useEnumDescription?: boolean;
+  isSupportParseEnumDesc?: boolean;
   /**
    * 自定义 hook
    */
@@ -278,7 +278,7 @@ export async function generateService({
       nullable: false,
       isOnlyGenTypeScriptType: false,
       isCamelCase: true,
-      useEnumDescription: false,
+      isSupportParseEnumDesc: false,
       ...rest,
     },
     openAPI
